@@ -61,11 +61,18 @@ int main(int argc, char *const argv[])
 	auto now = std::chrono::system_clock::now();
 	auto ymd = date::year_month_day{ date::floor<date::days>(now) };
 
-	config.init("Gebruik: givt-toekenning [option]\n\n",
+	config.init("Gebruik: givt-toekenning [option]\n",
+		mcfp::make_option("help,h", "Toon deze help tekst"),
 		mcfp::make_option<int>("jaar", static_cast<int>(ymd.year()), "Het jaar voor de toekenning"),
 		mcfp::make_option<int>("aantal-collectes", 3, "Het aantal collectes per weer"));
 
 	config.parse(argc, argv);
+
+	if (config.has("help"))
+	{
+		std::cout << config << '\n';
+		return 0;
+	}
 
 	auto jaar = date::year{ config.get<int>("jaar") };
 	int aantal_collectes = config.get<int>("aantal-collectes");
